@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>OUTR — Academic Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+<div id="app-wrap">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="logo">
+      <div class="logo-icon"><img src="images/outr_logo.png" alt="OUTR Emblem"></div>
+      <div><h2>OUTR - ERP</h2><p>Academic Analytics</p></div>
+    </div>
+    <div class="nav-section" id="nav-items"></div>
+    <div class="sidebar-footer">
+      <div class="avatar" id="user-avatar">AD</div>
+      <div class="user-info"><div class="user-name" id="user-name">Admin</div><div class="user-role" id="user-role">admin</div></div>
+      <button class="logout-btn" onclick="logout()" title="Logout">⏻</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main-area">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <span class="page-title" id="page-title">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <span class="sem-badge">2024–25</span>
+        <button class="notif-btn" onclick="toggleNotifPanel()">🔔<span class="notif-dot hidden" id="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div id="content-area">
+      <!-- ========== ADMIN DASHBOARD ========== -->
+      <div class="page" id="pg-admin-dashboard">
+        <div class="metrics" id="admin-metrics"></div>
+        <div class="two-col">
+          <div class="card"><div class="card-header"><span class="card-title">Grade Distribution</span></div><div class="chart-container"><canvas id="chart-grade-dist"></canvas></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">Subject Pass Rates</span></div><div class="chart-container"><canvas id="chart-pass-rate"></canvas></div></div>
+        </div>
+        <div class="two-col">
+          <div class="card"><div class="card-header"><span class="card-title">Top Performers</span></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Roll</th><th>CGPA</th></tr></thead><tbody id="top-performers-tbody"></tbody></table></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">Weak Students (CGPA &lt; 5)</span></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Roll</th><th>CGPA</th><th>Status</th></tr></thead><tbody id="weak-students-tbody"></tbody></table></div></div>
+        </div>
+      </div>
+
+      <!-- ========== ADMIN: MANAGE STUDENTS ========== -->
+      <div class="page" id="pg-manage-students">
+        <div class="toolbar">
+          <input type="text" id="stu-search" placeholder="Search by name or roll..." oninput="renderStudentTable()">
+          <select id="stu-branch-filter" onchange="renderStudentTable()"><option value="">All Branches</option><option>CS</option><option>ECE</option><option>MECH</option><option>CIVIL</option></select>
+          <button class="btn sm primary" onclick="exportStudentsCSV()">📥 Export CSV</button>
+        </div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Roll</th><th>Name</th><th>Branch</th><th>Sem</th><th>CGPA</th><th>Status</th><th>Account</th><th>Actions</th></tr></thead><tbody id="students-tbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ========== ADMIN: MANAGE FACULTY ========== -->
+      <div class="page" id="pg-manage-faculty">
+        <div class="toolbar">
+          <button class="btn sm primary" onclick="showAddFacultyModal()">+ Add Faculty</button>
+        </div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Subjects</th><th>Status</th><th>Actions</th></tr></thead><tbody id="faculty-tbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ========== ADMIN: MANAGE SUBJECTS ========== -->
+      <div class="page" id="pg-manage-subjects">
+        <div class="toolbar"><button class="btn sm primary" onclick="showAddSubjectModal()">+ Add Subject</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Code</th><th>Subject</th><th>Branch</th><th>Sem</th><th>Credits</th><th>Faculty</th><th>Students</th><th>Actions</th></tr></thead><tbody id="subjects-tbody"></tbody></table></div></div>
+      </div>
+
+      <!-- ========== ADMIN: CO-PO ========== -->
+      <div class="page" id="pg-copo">
+        <div class="notice info">CO–PO mapping tracks how Course Outcomes align with Programme Outcomes. Scale: 0=None, 1=Low, 2=Medium, 3=High.</div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">CO–PO Attainment Matrix</span><select id="copo-subject" onchange="renderCOPO()"></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Course Outcome</th><th>PO1</th><th>PO2</th><th>PO3</th><th>PO4</th><th>PO5</th><th>PO6</th><th>Avg</th></tr></thead><tbody id="copo-tbody"></tbody></table></div>
+          <div class="copo-legend"><span class="copo-chip c3">3 — High</span><span class="copo-chip c2">2 — Medium</span><span class="copo-chip c1">1 — Low</span><span class="copo-chip c0">0 — None</span></div>
+        </div>
+      </div>
+
+      <!-- ========== ADMIN: REPORTS ========== -->
+      <div class="page" id="pg-reports">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Generate Report</span></div>
+          <div class="form-grid">
+            <div class="form-group"><label>Subject</label><select id="rpt-subject"></select></div>
+            <div class="form-group"><label>Report Type</label><select id="rpt-type"><option>Full Result Sheet</option><option>Grade Distribution</option><option>Pass/Fail Summary</option></select></div>
+          </div>
+          <div class="form-actions"><button class="btn primary" onclick="generatePDF()">📄 Generate PDF</button><button class="btn outline" onclick="exportReportCSV()">📥 Export CSV</button></div>
+        </div>
+        <div class="two-col">
+          <div class="card"><div class="card-header"><span class="card-title">Pass / Fail Summary</span></div><div class="chart-container"><canvas id="chart-passfail"></canvas></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">Subject Average Marks</span></div><div class="chart-container"><canvas id="chart-subavg"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- ========== FACULTY DASHBOARD ========== -->
+      <div class="page" id="pg-faculty-dashboard">
+        <div class="metrics" id="fac-metrics"></div>
+        <div class="card"><div class="card-header"><span class="card-title">My Assigned Subjects</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Code</th><th>Subject</th><th>Branch</th><th>Sem</th><th>Students</th><th>Avg Marks</th><th>Pass %</th><th>Actions</th></tr></thead><tbody id="fac-subjects-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ========== FACULTY: MARKS ENTRY ========== -->
+      <div class="page" id="pg-marks-entry">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Upload Marks via Excel/CSV</span></div>
+          <div class="form-group"><label>Select Subject</label><select id="upload-subject" onchange="loadMarksEntry()"></select></div>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover');handleFileDrop(event)">
+            <div class="upload-icon">📁</div>
+            <p>Click or drag Excel/CSV file here</p>
+            <p class="upload-hint">Columns: Name, Roll/RegNo, MidSem, Assignment, Quiz, Attendance</p>
+          </div>
+          <input type="file" id="file-input" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleFileUpload(this)">
+          <div id="upload-result" class="hidden" style="margin-top:16px"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Manual Marks Entry</span><button class="btn sm outline" onclick="loadMarksEntry()">↻ Refresh</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Roll</th><th>Name</th><th>MidSem /20</th><th>Assign /10</th><th>Quiz /5</th><th>Attend /5</th><th>Total /40</th><th>Grade</th><th>GPA</th></tr></thead><tbody id="marks-entry-tbody"></tbody></table></div>
+          <div class="form-actions"><button class="btn success" onclick="saveAllMarks()">💾 Save All Marks</button><button class="btn primary" onclick="publishMarks()">📤 Publish Results</button></div>
+        </div>
+      </div>
+
+      <!-- ========== FACULTY: ANALYTICS ========== -->
+      <div class="page" id="pg-faculty-analytics">
+        <div class="form-group" style="max-width:300px;margin-bottom:20px"><label>Subject</label><select id="fac-analytics-sub" onchange="renderFacultyAnalytics()"></select></div>
+        <div class="two-col">
+          <div class="card"><div class="card-header"><span class="card-title">Grade Distribution</span></div><div class="chart-container"><canvas id="chart-fac-grade"></canvas></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">Marks Breakdown</span></div><div class="chart-container"><canvas id="chart-fac-breakdown"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- ========== STUDENT DASHBOARD ========== -->
+      <div class="page" id="pg-student-dashboard">
+        <div class="cgpa-card">
+          <div><div class="cgpa-big" id="stu-cgpa">0.00</div><div class="cgpa-label">CGPA</div></div>
+          <div class="cgpa-info"><div id="stu-name-display"></div><div id="stu-roll-display"></div><div id="stu-branch-display"></div></div>
+        </div>
+        <div class="metrics" id="stu-metrics"></div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Subject-wise Results</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm primary" onclick="viewOfficialMarkSheet()">📄 View Online Results Sheet</button>
+              <button class="btn sm outline" onclick="downloadMarkSheet()">📥 Download PDF</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Subject</th><th>MidSem /20</th><th>Assign /10</th><th>Quiz /5</th><th>Attend /5</th><th>Total /40</th><th>Grade</th><th>GPA</th><th>Result</th></tr></thead><tbody id="stu-results-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ========== STUDENT: SEARCH ========== -->
+      <div class="page" id="pg-search">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Search Results</span></div>
+          <div class="form-grid">
+            <div class="form-group"><label>Roll Number</label><input type="text" id="search-roll" placeholder="e.g. 21CS001"></div>
+            <div class="form-group"><label>Subject</label><select id="search-subject"><option value="">All Subjects</option></select></div>
+          </div>
+          <div class="form-actions"><button class="btn primary" onclick="doSearch()">🔍 Search</button></div>
+          <div id="search-results" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-header"><span>Notifications</span><button class="btn sm outline" onclick="markAllNotifsRead()">Mark all read</button></div>
+  <div id="notif-list"></div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/assets_b64.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

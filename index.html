@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OUTR - ERP — Odisha University of Technology and Research</title>
+  <meta name="description" content="Official OUTR-ERP Login Portal">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #eef2f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+    }
+
+    /* CENTERED OUTR-ERP CARD (Matches Screenshot Exactly) */
+    .erp-container {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.05);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TOP CAMPUS PHOTO BANNER */
+    .campus-banner {
+      width: 100%;
+      height: 98px;
+      background: #1e293b url('images/outr_banner.png') center/cover no-repeat;
+      display: block;
+      border-bottom: 2px solid #2563eb;
+    }
+
+    /* CARD INTERIOR CONTENT */
+    .erp-content {
+      padding: 22px 28px 28px;
+    }
+
+    /* CIRCULAR OUTR EMBLEM */
+    .emblem-wrap {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .emblem-img {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+    }
+
+    /* PORTAL TITLE */
+    .erp-heading {
+      font-family: 'Oswald', sans-serif;
+      text-align: center;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #3b5998;
+      margin-top: 4px;
+      margin-bottom: 18px;
+    }
+
+    /* ACCENT LINE ABOVE TABS */
+    .tab-accent-line {
+      width: 100%;
+      height: 2px;
+      background: #4e65f8;
+      margin-bottom: 12px;
+      border-radius: 1px;
+    }
+
+    /* 3 ROLE TABS (STUDENT | HOD/ADV/FACULTY | ADMIN) */
+    .tabs-row {
+      display: flex;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      background: #f9fafb;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 4px;
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #4b5563;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+      border-right: 1px solid #d1d5db;
+    }
+    .tab-btn:last-child {
+      border-right: none;
+    }
+    .tab-btn.active {
+      background: #1870d5;
+      color: #ffffff;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    /* INPUT FIELDS */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .main-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #374151;
+      letter-spacing: 0.3px;
+      display: block;
+      margin-bottom: 7px;
+    }
+    .input-box-wrap {
+      position: relative;
+    }
+    .text-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 17px;
+      font-family: inherit;
+      color: #111827;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .text-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* PASSWORD ROW */
+    .pw-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    .forgot-pw-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: #4361ee;
+      text-decoration: none;
+    }
+    .forgot-pw-link:hover {
+      text-decoration: underline;
+    }
+    .eye-toggle-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 17px;
+      padding: 4px;
+    }
+
+    /* MAIN LOG IN BUTTON */
+    .login-btn {
+      width: 100%;
+      padding: 13.5px;
+      background: #5066f6;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(80, 102, 246, 0.35);
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+    .login-btn:hover {
+      background: #4054e0;
+      box-shadow: 0 6px 16px rgba(80, 102, 246, 0.45);
+      transform: translateY(-1px);
+    }
+    .login-btn:active {
+      transform: translateY(1px);
+    }
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* SAMPLE CREDENTIALS HELPER */
+    .credentials-helper {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      font-size: 11.5px;
+    }
+    .cred-title {
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .cred-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cred-item:hover {
+      background: #e2e8f0;
+    }
+    .cred-tag {
+      font-weight: 700;
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      min-width: 54px;
+      text-align: center;
+    }
+    .cred-tag.student { background: #dbeafe; color: #1d4ed8; }
+    .cred-tag.faculty { background: #fef3c7; color: #b45309; }
+    .cred-tag.admin { background: #dcfce7; color: #15803d; }
+    .cred-val code {
+      font-family: monospace;
+      font-size: 11px;
+      background: #ffffff;
+      padding: 1px 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      color: #0f172a;
+    }
+    .cred-fill-btn {
+      font-size: 10.5px;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* ERROR NOTIFICATION */
+    .error-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* FIRST-LOGIN FORCED PASSWORD CHANGE */
+    #pw-change-card {
+      display: none;
+    }
+    .strength-indicator {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: all 0.3s;
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="erp-container">
+  <!-- 1. Top Campus Photo Banner -->
+  <div class="campus-banner"></div>
+
+  <div class="erp-content">
+    <!-- 2. Circular OUTR Emblem Logo -->
+    <div class="emblem-wrap">
+      <img src="images/outr_logo.png" alt="OUTR Emblem" class="emblem-img">
+    </div>
+
+    <!-- 3. Heading -->
+    <h1 class="erp-heading">OUTR - ERP</h1>
+
+    <!-- Accent line -->
+    <div class="tab-accent-line"></div>
+
+    <!-- Standard Login View -->
+    <div id="login-view">
+      <!-- 4. Three Role Switcher Tabs -->
+      <div class="tabs-row">
+        <button type="button" class="tab-btn active" data-role="student" onclick="setRole('student', this)">STUDENT</button>
+        <button type="button" class="tab-btn" data-role="faculty" onclick="setRole('faculty', this)">HOD/ADV/FACULTY</button>
+        <button type="button" class="tab-btn" data-role="admin" onclick="setRole('admin', this)">ADMIN</button>
+      </div>
+
+      <div id="login-error-msg" class="error-alert"></div>
+
+      <!-- 5. Registration Number Input -->
+      <div class="form-group">
+        <label class="main-label" id="lbl-user">OUTR REGISTRATION NUMBER</label>
+        <div class="input-box-wrap">
+          <input type="text" class="text-input" id="login-username" placeholder="23110278" autocomplete="username">
+        </div>
+      </div>
+
+      <!-- 6. Password Input with Eye Toggle -->
+      <div class="form-group">
+        <div class="pw-label-row">
+          <label class="main-label" for="login-password">PASSWORD</label>
+          <a href="javascript:void(0)" class="forgot-pw-link" onclick="handleForgotPw()">Forgot Password?</a>
+        </div>
+        <div class="input-box-wrap">
+          <input type="password" class="text-input" id="login-password" placeholder="••••••" autocomplete="current-password">
+          <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('login-password', this)" title="Show/Hide Password">👁️</button>
+        </div>
+      </div>
+
+      <!-- 7. Submit Action Button -->
+      <button type="button" class="login-btn" id="btn-login-action" onclick="performLogin()">Log in as Student</button>
+
+      <!-- 9. Sample Login Credentials Helper -->
+      <div class="credentials-helper">
+        <div class="cred-title">Sample Login Credentials:</div>
+        <div class="cred-item" onclick="autoFill('student', '21CS001', '21CS001')" title="Click to auto-fill">
+          <span class="cred-tag student">Student</span>
+          <span class="cred-val"><code>21CS001</code> / <code>21CS001</code></span>
+          <span class="cred-fill-btn">Fill ↵</span>
+        </div>
+        <div class="cred-item" onclick="autoFill('faculty', 'meena@saeras.edu', 'faculty123')" title="Click to auto-fill">
+          <span class="cred-tag faculty">Faculty</span>
+          <span class="cred-val"><code>meena@saeras.edu</code> / <code>faculty123</code></span>
+          <span class="cred-fill-btn">Fill ↵</span>
+        </div>
+        <div class="cred-item" onclick="autoFill('admin', 'admin', 'admin123')" title="Click to auto-fill">
+          <span class="cred-tag admin">Admin</span>
+          <span class="cred-val"><code>admin</code> / <code>admin123</code></span>
+          <span class="cred-fill-btn">Fill ↵</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- First-Time Login Forced Password Change View -->
+    <div id="pw-change-card">
+      <div style="background:#edeefd;border:1px solid #dbeafe;color:#3730a3;padding:12px 14px;border-radius:8px;font-size:12px;margin-bottom:16px;">
+        <strong>First-Time Login Security Notice:</strong><br>
+        Please create your personal password before accessing your student portal.
+      </div>
+
+      <div id="pw-error-msg" class="error-alert"></div>
+
+      <div class="form-group">
+        <label class="main-label" for="new-pw-input">NEW PASSWORD</label>
+        <div class="input-box-wrap">
+          <input type="password" class="text-input" id="new-pw-input" placeholder="At least 6 characters" oninput="evalStrength()">
+          <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('new-pw-input', this)">👁️</button>
+        </div>
+        <div class="strength-indicator"><div class="strength-fill" id="str-bar"></div></div>
+      </div>
+
+      <div class="form-group">
+        <label class="main-label" for="confirm-pw-input">CONFIRM NEW PASSWORD</label>
+        <div class="input-box-wrap">
+          <input type="password" class="text-input" id="confirm-pw-input" placeholder="Re-enter password">
+          <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('confirm-pw-input', this)">👁️</button>
+        </div>
+      </div>
+
+      <button type="button" class="login-btn" onclick="performPasswordChange()">Set Password &amp; Open Portal</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-text">
+  &copy; Odisha University of Technology and Research (OUTR), Bhubaneswar
+</div>
+
+<script>
+let currentRole = 'student';
+let pendingAuthUser = null;
+
+function setRole(role, btnEl) {
+  currentRole = role;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  const lbl = document.getElementById('lbl-user');
+  const userInput = document.getElementById('login-username');
+  const actionBtn = document.getElementById('btn-login-action');
+
+  if (role === 'student') {
+    lbl.textContent = 'OUTR REGISTRATION NUMBER';
+    userInput.placeholder = '23110278';
+    actionBtn.textContent = 'Log in as Student';
+  } else if (role === 'faculty') {
+    lbl.textContent = 'FACULTY USERNAME / EMAIL';
+    userInput.placeholder = 'meena@saeras.edu';
+    actionBtn.textContent = 'Log in as Faculty';
+  } else if (role === 'admin') {
+    lbl.textContent = 'ADMINISTRATOR USERNAME';
+    userInput.placeholder = 'admin';
+    actionBtn.textContent = 'Log in as Admin';
+  }
+}
+
+function autoFill(role, username, password) {
+  const btn = document.querySelector(`.tab-btn[data-role="${role}"]`);
+  if (btn) setRole(role, btn);
+  document.getElementById('login-username').value = username;
+  document.getElementById('login-password').value = password;
+}
+
+function togglePasswordVisibility(fieldId, btnEl) {
+  const field = document.getElementById(fieldId);
+  if (field.type === 'password') {
+    field.type = 'text';
+    btnEl.textContent = '🔒';
+  } else {
+    field.type = 'password';
+    btnEl.textContent = '👁️';
+  }
+}
+
+function handleForgotPw() {
+  alert('Please contact the OUTR Examination Cell / ERP Administrator to reset your password.');
+}
+
+async function performLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorBox = document.getElementById('login-error-msg');
+  const btn = document.getElementById('btn-login-action');
+
+  errorBox.style.display = 'none';
+
+  if (!username || !password) {
+    errorBox.textContent = 'Please enter your username/registration number and password.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = 'Authenticating...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, role: currentRole })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      errorBox.textContent = data.error || 'Invalid credentials or role mismatch.';
+      errorBox.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    const user = data.user;
+    if (user.mustChangePassword) {
+      pendingAuthUser = user;
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('pw-change-card').style.display = 'block';
+      return;
+    }
+
+    sessionStorage.setItem('saeras_session', JSON.stringify(user));
+    window.location.href = 'app.html';
+
+  } catch (err) {
+    errorBox.textContent = 'Server connection error. Please ensure the backend server is active.';
+    errorBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+function evalStrength() {
+  const pw = document.getElementById('new-pw-input').value;
+  const bar = document.getElementById('str-bar');
+  let score = 0;
+  if (pw.length >= 6) score++;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+
+  const widths = ['0%', '20%', '40%', '60%', '80%', '100%'];
+  const colors = ['#ef4444', '#ef4444', '#f59e0b', '#f59e0b', '#22c55e', '#22c55e'];
+  bar.style.width = widths[score];
+  bar.style.background = colors[score];
+}
+
+async function performPasswordChange() {
+  const pw = document.getElementById('new-pw-input').value;
+  const cpw = document.getElementById('confirm-pw-input').value;
+  const errorBox = document.getElementById('pw-error-msg');
+
+  errorBox.style.display = 'none';
+  if (pw.length < 6) {
+    errorBox.textContent = 'Password must be at least 6 characters.';
+    errorBox.style.display = 'block';
+    return;
+  }
+  if (pw !== cpw) {
+    errorBox.textContent = 'Passwords do not match.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: pendingAuthUser.id, newPassword: pw })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      errorBox.textContent = data.error || 'Failed to update password.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    pendingAuthUser.mustChangePassword = false;
+    sessionStorage.setItem('saeras_session', JSON.stringify(pendingAuthUser));
+    window.location.href = 'app.html';
+
+  } catch (err) {
+    errorBox.textContent = 'Server communication error.';
+    errorBox.style.display = 'block';
+  }
+}
+
+document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') performLogin(); });
+document.getElementById('login-username').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-password').focus(); });
+</script>
+</body>
+</html>
