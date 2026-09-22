@@ -112,15 +112,6 @@ http://localhost:5000
 
 ---
 
-## 🔑 Default Login Credentials
-
-| Role | Tab | Login ID / Reg No | Default Password | Features Accessible |
-| :--- | :--- | :--- | :--- | :--- |
-| **Student** | **STUDENT** | `23110278` | `23110278` | Official 6th-Sem Results Sheet (SGPA 8.07, 9 courses) & PDF download |
-| **Student** | **STUDENT** | `21CS001` | `21CS001` | 3rd-Sem Results & GPA card |
-| **Faculty** | **HOD/ADV/FACULTY** | `sanjukta@outr.com` | `faculty123` | Marks entry, Excel upload, analytics |
-| **Admin** | **ADMIN** | `admin` | `admin123` | Full administrative control, CO-PO mapping, audits |
-
 ---
 
 ## 📄 License
